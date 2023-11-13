@@ -3,18 +3,19 @@ import java.util.*;
 
 
 
+
 public class Main {
     public static void main(String[] args) {
         String root = System.getProperty("user.dir");
-        String out_line = "";
+        ArrayList<String> out_lines =  new ArrayList<String>();
 
-        try(FileReader reader = new FileReader(root+"/src/notes3.txt"))
+        try(BufferedReader reader = new BufferedReader(new FileReader(root+"/src/notes3.txt")))
         {
-            // читаем посимвольно
-            int c;
-            while((c=reader.read())!=-1){
+            // читаем построчно
+            String line;
+            while((line=reader.readLine())!=null){
 
-                out_line = out_line + (char)c;
+                out_lines.add(line);
             }
         }
         catch(IOException ex){
@@ -22,15 +23,13 @@ public class Main {
             System.out.println(ex.getMessage());
         }
 
-
-        String[] out_lines = out_line.split("\n");
-        HashMap<String, String> params = new HashMap<String, String>();
+        System.out.println(out_lines);
+        HashMap<String, String> params = new HashMap();
 
         for (String line: out_lines){
             if (line.equals("Trade: {") || line.equals("}")) {
                 continue;
             }
-
             line = line.strip();
             String[] line_words = line.split("=");
             params.put(line_words[0], line_words[1].replace("}","").replace("{",""));
@@ -40,55 +39,34 @@ public class Main {
             System.out.println(word + " " + params.get(word));
         }
 
-        int price = Integer.parseInt(params.get("carType"));
+        int price = Integer.parseInt(params.get("price"));
         String carType = params.get("carType");
 
         // 1 Способ
 
         switch (carType){
             case "HATCHBACK":
-                Trade1 HatchbackTrade = new Trade1(carType, price);
+                HatchBackTrade HatchbackTrade = new HatchBackTrade(price);
             case "SEDAN":
-                Trade1 SedanTrade = new Trade1(carType, price);
+                SedanTrade SedanTrade = new SedanTrade(price);
             case "SUV":
-                Trade1 SuvTrade = new Trade1(carType, price);
+                SuvTrade SuvTrade = new SuvTrade(price);
             case "PICKUP":
-                Trade1 PickupTrade = new Trade1(carType, price);
+                PickupTrade PickupTrade = new PickupTrade(price);
         }
 
         //2 Способ
-
-        Trade2.Type trade = Trade2.Type.valueOf(carType);
-
-    }
-}
-
-
-
-class Trade1 {
-
-    String carType;
-    int price;
-
-    public Trade1(String carType, int price) {
-        this.carType = carType;
-        this.price = price;
-    }
-}
-
-class Trade2 {
-
-    int price;
-    Type carType;
-
-
-    enum Type{
-        HATCHBACK,
-        SEDAN,
-        SUV,
-        PICKUP;
-
-        //abstract void createTrade(Trade2 trade);
+        Trade someTrade = null;
+        switch (carType){
+            case "HATCHBACK":
+                TradeType.HatchBack.createTrade(someTrade, price);
+            case "SEDAN":
+                TradeType.Sedan.createTrade(someTrade, price);
+            case "SUV":
+                TradeType.Suv.createTrade(someTrade, price);
+            case "PICKUP":
+                TradeType.PickUp.createTrade(someTrade, price);
+        }
 
     }
 }

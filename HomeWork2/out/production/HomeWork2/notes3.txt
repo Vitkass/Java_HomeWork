@@ -1,0 +1,4 @@
+Trade: {
+    carType={HATCHBACK}
+    price={23}
+}
