@@ -4,33 +4,14 @@ import java.lang.reflect.Field;
 // then press Enter. You can now see whitespace characters in your code.
 public class Main {
     public static void main(String[] args) {
+        Person person = new Person("John", "Doe", 30);
+        PersonDTO personDTO = new PersonDTO();
 
-        MyClass myClass = new MyClass();
-        String name = null;
-        int number = myClass.getNumber();
-        System.out.println(number+name);
+        BeanUtils.assign(personDTO, person);
 
-        try {
-            Field field = myClass.getClass().getDeclaredField("name");
-            field.setAccessible(true);
-            name = (String) field.get(myClass);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println(number + name);
-
-        MyClass clas = null;
-        try{
-            Class clazz = Class.forName(MyClass.class.getName());
-            clas = (MyClass) clazz.newInstance();
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println(clas);
-
-
+        System.out.println(personDTO.getFirstName()); // "John"
+        System.out.println(personDTO.getLastName()); // "Doe"
+        System.out.println(personDTO.getAge()); // 30
 
     }
 }
